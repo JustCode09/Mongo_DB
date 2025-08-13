@@ -1,0 +1,39 @@
+1. Field Update Operators
+These directly modify individual fields in documents.
+
+Operator	Meaning	Example
+$currentDate	Sets the field value to the current date or timestamp	js db.users.updateOne({ _id: 1 }, { $currentDate: { lastLogin: true } }) → Sets lastLogin to the current date/time.
+$inc	Increments (or decrements with a negative number) a numeric field	js db.products.updateOne({ name: "Laptop" }, { $inc: { stock: -1 } }) → Reduces stock by 1.
+$rename	Renames a field	js db.users.updateMany({}, { $rename: { "fullName": "name" } }) → Renames fullName to name in all documents.
+$set	Sets or updates a field's value	js db.users.updateOne({ _id: 1 }, { $set: { status: "active" } }) → Changes status to "active".
+$unset	Removes a field entirely from the document	js db.users.updateOne({ _id: 1 }, { $unset: { middleName: "" } }) → Deletes the middleName field.
+
+2. Array Update Operators
+These are used for modifying arrays inside documents.
+
+Operator	Meaning	Example
+$addToSet	Adds a value to an array only if it doesn’t already exist	js db.users.updateOne({ _id: 1 }, { $addToSet: { skills: "MongoDB" } }) → Adds "MongoDB" to skills if not present.
+$pop	Removes the first (-1) or last (1) element of an array	js db.users.updateOne({ _id: 1 }, { $pop: { skills: 1 } }) → Removes the last skill in skills array.
+$pull	Removes all elements matching a condition	js db.users.updateOne({ _id: 1 }, { $pull: { skills: "HTML" } }) → Removes "HTML" from skills array.
+$push	Adds a value to an array (duplicates allowed)	js db.users.updateOne({ _id: 1 }, { $push: { skills: "JavaScript" } }) → Always adds "JavaScript" to skills.
+
+Example: Combined Update
+If you want to:
+
+Increment views by 1
+
+Add "Node.js" to skills (only if not already there)
+
+Set lastUpdated to the current date
+
+js
+Copy
+Edit
+db.users.updateOne(
+  { _id: 1 },
+  {
+    $inc: { views: 1 },
+    $addToSet: { skills: "Node.js" },
+    $currentDate: { lastUpdated: true }
+  }
+);

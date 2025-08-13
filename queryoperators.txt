@@ -1,0 +1,49 @@
+1. Comparison Operators
+These are used when you want to compare field values in your documents.
+
+Operator	Meaning	Example
+$eq	Equal to	{ age: { $eq: 25 } } → Finds documents where age is exactly 25.
+$ne	Not equal to	{ status: { $ne: "active" } } → Finds documents where status is not "active".
+$gt	Greater than	{ price: { $gt: 100 } } → Finds documents where price is greater than 100.
+$gte	Greater than or equal to	{ age: { $gte: 18 } } → Finds documents where age is 18 or older.
+$lt	Less than	{ qty: { $lt: 10 } } → Finds documents where qty is less than 10.
+$lte	Less than or equal to	{ score: { $lte: 50 } } → Finds documents where score is 50 or lower.
+$in	Matches any value in an array	{ category: { $in: ["electronics", "books"] } } → Finds documents where category is either "electronics" or "books".
+$nin	Not in array (opposite of $in)	{ category: { $nin: ["outdated", "discontinued"] } } → Excludes documents with these categories.
+
+2. Logical Operators
+Used to combine multiple query conditions.
+
+Operator	Meaning	Example
+$and	All conditions must be true	{ $and: [ { age: { $gte: 18 } }, { status: "active" } ] } → Finds active users who are 18 or older.
+$or	At least one condition must be true	{ $or: [ { age: { $lt: 18 } }, { status: "pending" } ] } → Finds users who are under 18 or have a pending status.
+$nor	None of the conditions are true	{ $nor: [ { status: "active" }, { age: { $lt: 18 } } ] } → Finds users who are not active and not under 18.
+$not	Condition must be false	{ age: { $not: { $gt: 30 } } } → Finds users whose age is not greater than 30.
+
+3. Evaluation Operators
+These let you do advanced filtering.
+
+Operator	Meaning	Example
+$regex	Pattern matching with regular expressions	{ name: { $regex: /^J/i } } → Finds names starting with J (case-insensitive).
+$text	Text search in indexed fields	{ $text: { $search: "mongodb tutorial" } } → Finds documents that contain "mongodb" or "tutorial" in a text-indexed field.
+$where	JavaScript expression filter (slow, not recommended for large collections)	{ $where: "this.age + this.experience > 10" } → Finds docs where age + experience > 10.
+
+Example Combined Query
+Suppose you have a products collection, and you want:
+
+Price greater than 100
+
+Category is "electronics" or "furniture"
+
+Name starts with "S"
+
+js
+Copy
+Edit
+db.products.find({
+  $and: [
+    { price: { $gt: 100 } },
+    { category: { $in: ["electronics", "furniture"] } },
+    { name: { $regex: /^S/ } }
+  ]
+});

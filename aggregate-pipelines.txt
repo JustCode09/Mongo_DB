@@ -1,0 +1,117 @@
+What is an Aggregation Pipeline?
+An aggregation pipeline in MongoDB is like a factory assembly line for your data:
+
+Documents enter the pipeline.
+
+Each stage transforms the documents in some way.
+
+The output of one stage becomes the input for the next.
+
+At the end, you get the processed results (summarized, sorted, reshaped, etc.).
+
+The order of stages matters — putting $group before $match will give different results than $match before $group.
+
+Basic Syntax
+js
+Copy
+Edit
+db.collection.aggregate([
+  { /* stage 1 */ },
+  { /* stage 2 */ },
+  ...
+])
+Common Aggregation Pipeline Stages
+1. $match – Filter documents (like .find() but inside pipeline)
+js
+Copy
+Edit
+{ $match: { likes: { $gt: 1 } } }
+Keeps only documents with likes > 1.
+
+2. $group – Group by a field and calculate aggregates
+js
+Copy
+Edit
+{
+  $group: {
+    _id: "$category",
+    totalLikes: { $sum: "$likes" }
+  }
+}
+Groups documents by category and sums up their likes.
+
+Common accumulator operators inside $group:
+
+$sum: Sum values
+
+$avg: Average
+
+$min: Minimum value
+
+$max: Maximum value
+
+$push: Create an array of values
+
+$addToSet: Array of unique values
+
+3. $sort – Sort the results
+js
+Copy
+Edit
+{ $sort: { totalLikes: -1 } }
+Sorts by totalLikes descending.
+
+4. $project – Shape the output (include/exclude fields, compute new ones)
+js
+Copy
+Edit
+{
+  $project: {
+    title: 1,
+    likes: 1,
+    uppercaseTitle: { $toUpper: "$title" }
+  }
+}
+Only keeps title and likes, and adds a computed uppercaseTitle.
+
+5. $limit – Limit number of results
+js
+Copy
+Edit
+{ $limit: 5 }
+Only returns 5 documents.
+
+6. $skip – Skip a number of documents
+js
+Copy
+Edit
+{ $skip: 10 }
+Skips the first 10 documents (useful for pagination).
+
+7. $unwind – Breaks arrays into individual documents
+js
+Copy
+Edit
+{ $unwind: "$tags" }
+If a document has tags: ["a", "b"], it becomes two documents — one with tags: "a", one with tags: "b".
+
+Full Example
+Say you want to:
+
+Find posts with more than 1 like.
+
+Group them by category and sum their likes.
+
+Sort by total likes (highest first).
+
+Show only top 3 categories.
+
+js
+Copy
+Edit
+db.posts.aggregate([
+  { $match: { likes: { $gt: 1 } } },
+  { $group: { _id: "$category", totalLikes: { $sum: "$likes" } } },
+  { $sort: { totalLikes: -1 } },
+  { $limit: 3 }
+])

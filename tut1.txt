@@ -1,0 +1,38 @@
+Here’s a quick breakdown of what you did in that session:
+
+🗑 Delete (drop/remove):
+
+db.dropDatabase() → Deleted the entire school database.
+
+$unset → Removed specific fields from documents (e.g., removed fullTime from spongebob and sandy).
+
+📝 Insert (add new data):
+
+insertOne() → Added single student documents (spongebob, larry with only a name, larry with full details).
+
+insertMany() → Added multiple student documents at once (pattrick, sandy, gary).
+
+🔍 Query (find data):
+
+find() → Retrieved all or filtered data (e.g., find({name:"spongebob"})).
+
+Projection queries → Returned only certain fields (e.g., {_id:false, name:true, gpa:true}).
+
+Filters with multiple conditions (e.g., find({gpa:4.0, fullTime:true})).
+
+📋 Sort & Limit:
+
+.sort({name:1}) & .sort({name:-1}) → Sorted by name ascending/descending.
+
+.sort({gpa:1}) & .sort({gpa:-1}) → Sorted by GPA ascending/descending.
+
+.limit(n) → Limited results to first n documents.
+
+✏ Update (modify data):
+
+updateOne() with $set → Changed fields for a specific document (e.g., set fullTime:true for spongebob).
+
+updateOne() with $unset → Removed a field from a specific document.
+
+updateMany() with $set → Updated all documents at once (set fullTime:false for all).
+
